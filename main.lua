@@ -1,3 +1,10 @@
+--[[
+---------------------------------------------------
+    Copyright (C) wst.pub, All Rights Reserved.
+---------------------------------------------------
+]]
+
+
 local function get_input_file()
     local path = ""
     if #arg ~= 0 then
