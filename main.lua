@@ -1,10 +1,3 @@
---[[
----------------------------------------------------
-    Copyright (C) wst.pub, All Rights Reserved.
----------------------------------------------------
-]]
-
-
 local function get_input_file()
     local path = ""
     if #arg ~= 0 then
@@ -53,9 +46,11 @@ local function txt_to_table(f)
         table.insert(rtnstr, line_num, line)
         line_num = line_num + 1
     end
+    f:close()
     return rtnstr
 end
 
+---@param s string string has redundant spaces
 local function delete_spaces(s)
     local del = 0
     for i = 1, #s do
