@@ -5,58 +5,6 @@
 ]]
 
 
-local function get_input_file()
-    local path = ""
-    if #arg ~= 0 then
-        for i = 1, #arg do
-            path = path .. arg[i]
-        end
-    else
-        print("drag your file that need to be processed down here")
-        path = io.stdin:read("*l")
-        --#region process path
-        if string.sub(path, 1, 1) == "\"" then
-            path = string.sub(path, 2, #path)
-        end
-        if string.sub(path, -1) == "\"" then
-            path = string.sub(path, 1, #path - 1)
-        end
-        --#endregion
-    end
-
-    return (
-        {
-            xpcall(
-                function()
-                    local f = io.open(path, "r")
-                    if type(f) == "userdata" then
-                        print("please wait...")
-                    else
-                        error()
-                    end
-                    return f
-                end,
-                function(err)
-                    print("check the file path you've input.")
-                    os.execute("pause")
-                    os.exit()
-                end
-            )
-        }
-    )[2]
-end
-
-local function txt_to_table(f)
-    local rtnstr = {}
-    local line_num = 1
-    for line in f:lines() do
-        table.insert(rtnstr, line_num, line)
-        line_num = line_num + 1
-    end
-    f:close()
-    return rtnstr
-end
-
 ---@param s string string has redundant spaces
 local function delete_spaces(s)
     local del = 0
@@ -70,7 +18,7 @@ local function delete_spaces(s)
     return string.sub(s, 1, -del - 1)
 end
 
-local function process_srt(srt_raw)
+local function parse_srt(srt_raw)
 
     local inBlock
 
@@ -122,20 +70,4 @@ local function process_srt(srt_raw)
 
 end
 
-local srt = txt_to_table(get_input_file())
-
-local t0 <const> = os.clock()
-
-local parsed_srt = {process_srt(srt)}
-
-local dt <const> = os.clock() - t0
-
-local out <close> = io.open("out.txt", "w+")
-
-out:setvbuf("full")
-
-for i = parsed_srt[2], parsed_srt[3] do
-    out:write("\n\n\t\t" .. parsed_srt[1][i].text)
-end
-
-print(string.format("done!\nproc time: %.fms", dt * 1000))
+return parse_srt
