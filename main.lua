@@ -18,6 +18,16 @@ local function delete_spaces(s)
     return string.sub(s, 1, -del - 1)
 end
 
+---@param str string
+---@return table
+local function split(str)
+    local t = {}
+    for chunk in string.gmatch(str, "[^\n]+") do
+        table.insert(t, chunk)
+    end
+    return t
+end
+
 local function parse_srt(srt_raw)
 
     local inBlock
@@ -29,6 +39,8 @@ local function parse_srt(srt_raw)
     local parsed_srt = {}
 
     local next_line_to_be_processed = -1
+
+    local srt_raw = split(srt_raw)
 
     for i = 1, #srt_raw do
         if i >= next_line_to_be_processed then
